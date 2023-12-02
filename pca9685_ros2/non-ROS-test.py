@@ -17,10 +17,11 @@ kit = ServoKit(channels=16, i2c=i2c_bus, address=0x40)
 print('Setting steering and throttle channels')
 steering = kit.servo[0]
 steering_range = [50, 130] # [max left, max right]
+steering.angle = 90 # set steering to neutral position
 
 # channel 1 needs to be set for PWM DC motor control
 throttle = kit.continuous_servo[1]
-throttle_values = [0.00, 0.08] # [min, max]
+throttle_values = [-0.08, 0.00, 0.08] # [reverse, neutral, forward]
 
 def read_keyboard_input():
     # if user presses a key, return the key
@@ -45,7 +46,7 @@ def main():
     if input("Press c to continue") == 'c':
         
         # set throttle to neutral position
-        throttle.throttle = throttle_values[0]
+        throttle.throttle = throttle_values[1]
         # set steering to neutral position
         steering.angle = 90
         
@@ -55,15 +56,19 @@ def main():
 
             if key == 'w':
                 print("Throttle Forward")
-                throttle.throttle = throttle_values[1]
+                throttle.throttle = throttle_values[2]
 
             if key == 's':
                 print("Throttle Neutral")
+                throttle.throttle = throttle_values[1]
+
+            if key == 'x':
+                print("Throttle Reverse")
                 throttle.throttle = throttle_values[0]
 
             if key == 'a':
                 if steering.angle > steering_range[0]:
-                    print("Steering Left by 1 degree")
+                    # print("Steering Left by 1 degree")
                     steering.angle = steering.angle - 1
                     # print("Steering angle: ", steering.angle)
                 else:
@@ -71,7 +76,7 @@ def main():
 
             if key == 'd':
                 if steering.angle < steering_range[1]:
-                    print("Steering Right by 1 degree")
+                    # print("Steering Right by 1 degree")
                     steering.angle = steering.angle + 1
                     # print("Steering angle: ", steering.angle)
                 else:
