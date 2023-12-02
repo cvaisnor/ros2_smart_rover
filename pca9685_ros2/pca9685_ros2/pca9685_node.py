@@ -1,4 +1,6 @@
 import rclpy
+import board
+import busio
 from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
@@ -7,6 +9,8 @@ from adafruit_servokit import ServoKit
 default_steering_angle = 90
 steering_range = [50, 130]
 throttle_values = [0.00, 0.08]
+
+i2c_bus = busio.I2C(board.SCL, board.SDA)
 
 class PCA9685Node(Node):
     def __init__(self):
@@ -41,3 +45,22 @@ class PCA9685Node(Node):
         msg.linear.x = 0.0
         msg.angular.z = 0.0
         self.publisher_.publish(msg)
+        self.get_logger().info(f'Publishing (linear, angular): ({msg.linear.x}, {msg.angular.z})')
+
+
+def main(args=None):
+    
+    rclpy.init(args=args)
+    
+    pca9685_node = PCA9685Node()
+    
+    rclpy.spin(pca9685_node)
+
+    pca9685_node.destroy_node()
+    
+    rclpy.shutdown()
+
+
+
+if __name__ == '__main__':
+    main()
