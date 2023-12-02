@@ -15,7 +15,7 @@ i2c_bus = busio.I2C(board.SCL, board.SDA)
 class PCA9685Node(Node):
     def __init__(self):
         super().__init__('pca9685_node')
-        self.get_logger().info('Initializing PCA9685 Listener Node')
+        self.get_logger().info('Initializing PCA9685 Node')
         self.subscription = self.create_subscription(Twist, 'cmd_vel', self.listener_callback, 10)
 
         kit = ServoKit(channels=16, i2c=i2c_bus, address=0x40)

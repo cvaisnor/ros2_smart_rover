@@ -19,7 +19,7 @@ setup(
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [ 'pca9685_subscriber = pca9685_ros2.pca_node:main'
+        'console_scripts': [ 'pca9685_node = pca9685_ros2.pca9685_node:main'
         ],
     },
 )
