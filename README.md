@@ -2,8 +2,11 @@
 
 [RPLidar A2M12 Package](https://github.com/Slamtec/sllidar_ros2)
 
-[PCA9685 Package](https://github.com/stevej52/ros2_pca9685)
-- *Not added as submodule*
+Notes:
+- After building a new package:
+```
+source ~/ros2_rover/install/setup.bash
+```
 
 TODOs:
 - Clean up (!!) code for PCA9685 node

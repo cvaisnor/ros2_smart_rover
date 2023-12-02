@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'ros2_pca9685'
+package_name = 'pca9685_ros2'
 
 setup(
     name=package_name,
@@ -13,15 +13,13 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='main',
-    maintainer_email='stevej52@gmail.com',
+    maintainer='chris',
+    maintainer_email='chrisvaisnor@gmail.',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [
-             'talker = ros2_pca9685.publisher_member_function:main',
-             'listener = ros2_pca9685.subscriber_member_function:main',
+        'console_scripts': [ 'pca9685_node = pca9685_ros2.pca9685_node:main'
         ],
     },
 )
