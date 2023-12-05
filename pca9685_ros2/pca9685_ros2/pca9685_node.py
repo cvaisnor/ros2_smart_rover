@@ -37,33 +37,36 @@ class PCA9685Node(Node):
             10
         )
 
-        # note: 
-        #     linear.x is throttle
+        # note: /cmd_vel only contains velocity information, not position information
+        #     linear.x is throttle # for now it is position
         #     angular.z is steering
 
         
     # callback function that is called when a new message is received on the /cmd_vel topic and prints the message
     def listener_callback(self, msg):
         # ensure that the throttle value is within the range of the throttle servo
-        if msg.linear.x < throttle_values[0]:
-            msg.linear.x = throttle_values[0]
-        elif msg.linear.x > throttle_values[2]:
-            msg.linear.x = throttle_values[2]
-        
+        if msg.linear.x < -4:
+            new_throttle = throttle_values[1] # neutral
+        else:
+            new_throttle = msg.linear.x + self.throttle_servo.throttle
+            if new_throttle > throttle_values[2]:
+                new_throttle = throttle_values[2]
+            elif new_throttle < throttle_values[0]:
+                new_throttle = throttle_values[0]
+
         # ensure that the steering angle is within the range of the steering servo
-        if msg.angular.z == 0:
-            msg.angular.z = DEFAULT_STEERING_ANGLE
-        if msg.angular.z < steering_range[0]:
-            msg.angular.z = steering_range[0]
-        elif msg.angular.z > steering_range[1]:
-            msg.angular.z = steering_range[1]
+        new_steering_angle = self.steering_servo.angle + msg.angular.z
+        if new_steering_angle > steering_range[1]:
+            new_steering_angle = steering_range[1]
+        elif new_steering_angle < steering_range[0]:
+            new_steering_angle = steering_range[0]
 
         # set the steering angle and throttle to the values received from the /cmd_vel topic
-        self.steering_servo.angle = msg.angular.z
-        self.throttle_servo.throttle = msg.linear.x
+        self.steering_servo.angle = new_steering_angle
+        self.throttle_servo.throttle = new_throttle
 
         # print the steering angle and throttle values
-        self.get_logger().info(f'Steering angle: {msg.angular.z}, Throttle: {msg.linear.x}')
+        self.get_logger().info(f'Steering angle: {new_steering_angle}, Throttle: {new_throttle}')
 
 
 def main(args=None):

@@ -37,28 +37,24 @@ class KeyboardController(Node):
         return old_msg
     
 
-    def build_message(self, key, old_msg=None):
+    def build_message(self, key):
         '''This function builds a message based on the key pressed and only changes the steering angle and throttle values that are affected by the key pressed'''
-        DEFAULT_STEERING_ANGLE = 90.0
-        steering_range = [50.0, 130.0]
-        throttle_values = [-0.08, 0.00, 0.08] # [reverse, neutral, forward]
-        if old_msg:
-            self.msg.linear.x = old_msg.linear.x
-            self.msg.angular.z = old_msg.angular.z
+
+        # after each message is published, the steering angle and throttle values are reset to their default values 
+        self.msg.linear.x = 0.0
+        self.msg.angular.z = 0.0
 
         if key == 'w':
-            self.msg.linear.x = throttle_values[2] # forward
+            self.msg.linear.x = 0.08 # increase throttle
         elif key == 's':
-            self.msg.linear.x = throttle_values[1] # neutral
+            self.msg.linear.x = -5.0 # stop
         elif key == 'a':
-            self.msg.angular.z = steering_range[0] # left
+            self.msg.angular.z = -10.0 # turn left x degrees
         elif key == 'd':
-            self.msg.angular.z = steering_range[1] # right
+            self.msg.angular.z = 10.0 # right turn x degrees
         elif key == 'x':
-            self.msg.linear.x = throttle_values[0] # reverse
+            self.msg.linear.x = -0.02 # decrease throttle
         elif key == 'q':
-            self.msg.linear.x = throttle_values[1]
-            self.msg.angular.z = DEFAULT_STEERING_ANGLE
             self.destroy_node()
             rclpy.shutdown()
             sys.exit()
