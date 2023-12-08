@@ -4,6 +4,7 @@ import busio
 from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Joy
 from adafruit_servokit import ServoKit
 
 DEFAULT_STEERING_ANGLE = 90.0
@@ -33,7 +34,15 @@ class PCA9685Node(Node):
         self.cmd_vel_sub = self.create_subscription(
             Twist,
             'cmd_vel',
-            self.listener_callback,
+            self.cmd_vel_callback,
+            10
+        )
+
+        # create a subscriber to the /joy topic
+        self.joy_sub = self.create_subscription(
+            Joy,
+            'joy',
+            self.joy_callback,
             10
         )
 
@@ -43,7 +52,7 @@ class PCA9685Node(Node):
 
         
     # callback function that is called when a new message is received on the /cmd_vel topic and prints the message
-    def listener_callback(self, msg):
+    def cmd_vel_callback(self, msg):
         # ensure that the throttle value is within the range of the throttle servo
         if msg.linear.x < -4:
             new_throttle = throttle_values[1] # neutral
@@ -67,6 +76,17 @@ class PCA9685Node(Node):
 
         # print the steering angle and throttle values
         self.get_logger().info(f'Steering angle: {new_steering_angle}, Throttle: {new_throttle}')
+
+
+# Joy msg structure
+# Header header           # timestamp in the header is the time the data is received from the joystick
+# float32[] axes          # the axes measurements from a joystick
+# int32[] buttons         # the buttons measurements from a joystick
+
+# callback function that is called when a new message is received on the /joy topic and prints the message
+    def joy_callback(self, msg):
+        # throttle is position 1 in the array, steering is position 3
+        self.get_logger().info(f'Throttle: {msg.axes[1]}, Steering: {msg.axes[3]}')
 
 
 def main(args=None):

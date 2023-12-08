@@ -1,6 +1,12 @@
 # ROS2 AI Rover Personal Project
 
-- Submodule: [RPLidar A2M12 Package](https://github.com/Slamtec/sllidar_ros2)
+- OnShape Design Files: [Rover](https://cad.onshape.com/documents/681d339b3385a03b7c82fd40/w/77c29d5f0b7b6c4892b4e7f8/e/d86bbe048173de173ee3c9b3?renderMode=0&uiState=6573754ecfb8225d4675653b)
+
+- Submodule: [Slamtec sllidar_ros2](https://github.com/Slamtec/sllidar_ros2)
+
+- Installed Binary Packages:
+- ROS2 Foxy joy
+- ROS2 Foxy depthai_ros
 
 Notes:
 - After building a new package:
@@ -8,9 +14,16 @@ Notes:
 source ~/ros2_rover/install/setup.bash
 ```
 
+Current Status:
+- BLE controller connected to Jetson
+- PCA9685 node subscribed to /cmd_vel and /joy
+
 TODOs:
-- Setup bluetooth controller connection
-- Add joystick node as publisher to cmd_vel
+- Decide on structure for throttle and steering absolute position topics
+    - /joy should be absolute position
+    - /cmd_vel should be velocity
+    - new topic for posting absolute position needed
+        - add PCA9685 node as another subscriber
 - [Test depthai_ros2 example for RGB](https://github.com/luxonis/depthai-ros/blob/humble/depthai_examples/src/rgb_video_subscriber.cpp)
 - Attempt to debug Rviz2:
 ```bash
@@ -31,7 +44,6 @@ Future Plans:
     - [Do As I Can, Not As I Say: Grounding Language in Robotic Affordances](https://arxiv.org/abs/2204.01691)
     - [ProgPrompt: Generating Situated Robot Task Plans using Large Language Models](https://arxiv.org/abs/2209.11302)
     - [Nvidia Eureka](https://arxiv.org/abs/2310.12931)
-
 
 
 ![Rover_v4](/imgs/rover_v4.jpeg)
