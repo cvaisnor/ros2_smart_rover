@@ -1,10 +1,11 @@
 # ROS2 AI Rover Personal Project
 
-- OnShape Design Files: [Rover](https://cad.onshape.com/documents/681d339b3385a03b7c82fd40/w/77c29d5f0b7b6c4892b4e7f8/e/d86bbe048173de173ee3c9b3?renderMode=0&uiState=6573754ecfb8225d4675653b)
+3D Design Files: [OnShape Link](https://cad.onshape.com/documents/681d339b3385a03b7c82fd40/w/77c29d5f0b7b6c4892b4e7f8/e/d86bbe048173de173ee3c9b3?renderMode=0&uiState=6573754ecfb8225d4675653b)
 
-- Submodule: [Slamtec sllidar_ros2](https://github.com/Slamtec/sllidar_ros2)
+Submodules: 
+- [Slamtec sllidar_ros2](https://github.com/Slamtec/sllidar_ros2)
 
-- Installed Binary Packages:
+Installed Binary Packages:
 - ROS2 Foxy joy
 - ROS2 Foxy depthai_ros
 
@@ -45,5 +46,5 @@ Future Plans:
     - [ProgPrompt: Generating Situated Robot Task Plans using Large Language Models](https://arxiv.org/abs/2209.11302)
     - [Nvidia Eureka](https://arxiv.org/abs/2310.12931)
 
-
-![Rover_v4](/imgs/rover_v4.jpeg)
+Build photo as of 12-09-23:
+![Rover](/imgs/rover_120923.jpeg)
