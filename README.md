@@ -6,9 +6,11 @@ Submodules:
 - [Slamtec sllidar_ros2](https://github.com/Slamtec/sllidar_ros2)
 
 Installed Binary Packages:
-- ROS2 Foxy joy
-- ROS2 Foxy teleop_twist_joy
+- ROS2 Foxy [joy](https://index.ros.org/p/joy/)
 - ROS2 Foxy depthai_ros
+- ROS2 Foxy teleop_twist_joy (This does not work!)
+    - Create issue
+    - Only publishes the first /cmd_vel message, then never publishes again
 
 Notes:
 - After building a new package:
@@ -16,17 +18,15 @@ Notes:
 source ~/ros2_rover/install/setup.bash
 ```
 
+Note: need to login with screen on rover to enable joystick to be detected
+- TODO: try and fix this
+
 How to run:
 ```bash
 ros2 run pca9685_ros2 pca9685_node
 (new terminal)
 ros2 run joy joy_node
 ```
-
-
-Current Status:
-- BLE controller connected to Jetson
-- PCA9685 node subscribed to /cmd_vel and /joy
 
 TODOs:
 - Setup launch file for joystick and PCA9685
