@@ -7,6 +7,7 @@ Submodules:
 
 Installed Binary Packages:
 - ROS2 Foxy joy
+- ROS2 Foxy teleop_twist_joy
 - ROS2 Foxy depthai_ros
 
 Notes:
@@ -15,16 +16,20 @@ Notes:
 source ~/ros2_rover/install/setup.bash
 ```
 
+How to run:
+```bash
+ros2 run pca9685_ros2 pca9685_node
+(new terminal)
+ros2 run joy joy_node
+```
+
+
 Current Status:
 - BLE controller connected to Jetson
 - PCA9685 node subscribed to /cmd_vel and /joy
 
 TODOs:
-- Decide on structure for throttle and steering absolute position topics
-    - /joy should be absolute position
-    - /cmd_vel should be velocity
-    - new topic for posting absolute position needed
-        - add PCA9685 node as another subscriber
+- Setup launch file for joystick and PCA9685
 - [Test depthai_ros2 example for RGB](https://github.com/luxonis/depthai-ros/blob/humble/depthai_examples/src/rgb_video_subscriber.cpp)
 - Attempt to debug Rviz2:
 ```bash
