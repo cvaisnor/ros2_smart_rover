@@ -9,7 +9,7 @@ from adafruit_servokit import ServoKit
 
 DEFAULT_STEERING_ANGLE = 90.0
 steering_range = [50.0, 130.0]
-throttle_values = [-0.08, 0.00, 0.08] # [reverse, neutral, forward]
+throttle_values = [-0.2, 0.00, 0.2] # [reverse, neutral, forward]
 
 i2c_bus = busio.I2C(board.SCL, board.SDA)
 
@@ -31,12 +31,12 @@ class PCA9685Node(Node):
         self.throttle_servo.throttle = throttle_values[1]
 
         # create a subscriber to the /cmd_vel topic
-        self.cmd_vel_sub = self.create_subscription(
-            Twist,
-            'cmd_vel',
-            self.cmd_vel_callback,
-            10
-        )
+        # self.cmd_vel_sub = self.create_subscription(
+        #     Twist,
+        #     'cmd_vel',
+        #     self.cmd_vel_callback,
+        #     10
+        # )
 
         # create a subscriber to the /joy topic
         self.joy_sub = self.create_subscription(
@@ -46,55 +46,54 @@ class PCA9685Node(Node):
             10
         )
 
-        # note: /cmd_vel only contains velocity information, not position information
-        #     linear.x is throttle # for now it is position
-        #     angular.z is steering
-
         
-    # callback function that is called when a new message is received on the /cmd_vel topic and prints the message
-    def cmd_vel_callback(self, msg):
-        # ensure that the throttle value is within the range of the throttle servo
-        if msg.linear.x < -4:
-            new_throttle = throttle_values[1] # neutral
-        else:
-            new_throttle = msg.linear.x + self.throttle_servo.throttle
-            if new_throttle > throttle_values[2]:
-                new_throttle = throttle_values[2]
-            elif new_throttle < throttle_values[0]:
-                new_throttle = throttle_values[0]
+    # # callback function that is called when a new message is received on the /cmd_vel topic and prints the message
+    # def cmd_vel_callback(self, msg):
+    #     # ensure that the throttle value is within the range of the throttle servo
+    #     if msg.linear.x < -4:
+    #         new_throttle = throttle_values[1] # neutral
+    #     else:
+    #         new_throttle = msg.linear.x + self.throttle_servo.throttle
+    #         if new_throttle > throttle_values[2]:
+    #             new_throttle = throttle_values[2]
+    #         elif new_throttle < throttle_values[0]:
+    #             new_throttle = throttle_values[0]
 
-        # ensure that the steering angle is within the range of the steering servo
-        new_steering_angle = self.steering_servo.angle + msg.angular.z
-        if new_steering_angle > steering_range[1]:
-            new_steering_angle = steering_range[1]
-        elif new_steering_angle < steering_range[0]:
-            new_steering_angle = steering_range[0]
+    #     # ensure that the steering angle is within the range of the steering servo
+    #     new_steering_angle = self.steering_servo.angle + msg.angular.z
+    #     if new_steering_angle > steering_range[1]:
+    #         new_steering_angle = steering_range[1]
+    #     elif new_steering_angle < steering_range[0]:
+    #         new_steering_angle = steering_range[0]
+
+    #     # set the steering angle and throttle to the values received from the /cmd_vel topic
+    #     self.steering_servo.angle = new_steering_angle
+    #     self.throttle_servo.throttle = new_throttle
+
+    #     # print the steering angle and throttle values
+    #     self.get_logger().info('Steering Angle: {0}'.format(self.steering_servo.angle))
+    #     self.get_logger().info('Throttle: {0}'.format(self.throttle_servo.throttle))
+
+# make a new function that is called when a new message is received on the /joy topic
+    def joy_callback(self, msg):
+        new_steering_angle = DEFAULT_STEERING_ANGLE + msg.axes[3] * -30
+        new_throttle = msg.axes[1]
+        # scale throttle value to be within the range of the throttle servo
+        new_throttle = (new_throttle + 1) / 2 * (throttle_values[2] - throttle_values[0]) + throttle_values[0]
 
         # set the steering angle and throttle to the values received from the /cmd_vel topic
         self.steering_servo.angle = new_steering_angle
         self.throttle_servo.throttle = new_throttle
 
         # print the steering angle and throttle values
-        self.get_logger().info(f'Steering angle: {new_steering_angle}, Throttle: {new_throttle}')
-
-
-# Joy msg structure
-# Header header           # timestamp in the header is the time the data is received from the joystick
-# float32[] axes          # the axes measurements from a joystick
-# int32[] buttons         # the buttons measurements from a joystick
-
-# callback function that is called when a new message is received on the /joy topic and prints the message
-    def joy_callback(self, msg):
-        # throttle is position 1 in the array, steering is position 3
-        self.get_logger().info(f'Throttle: {msg.axes[1]}, Steering: {msg.axes[3]}')
-
+        self.get_logger().info('Steering Angle: {0}'.format(self.steering_servo.angle))
+        self.get_logger().info('Throttle: {0}'.format(self.throttle_servo.throttle))
 
 def main(args=None):
 
     rclpy.init(args=args)
     pca9685_node = PCA9685Node()
     rclpy.spin(pca9685_node)
-
 
     # on shutdown, set steering and throttle to neutral position
     # pca9685_node.steering_servo.angle = DEFAULT_STEERING_ANGLE
