@@ -51,5 +51,5 @@ Future Plans:
     - [ProgPrompt: Generating Situated Robot Task Plans using Large Language Models](https://arxiv.org/abs/2209.11302)
     - [Nvidia Eureka](https://arxiv.org/abs/2310.12931)
 
-Build photo as of 12-09-23:
-![Rover](/imgs/rover_120923.jpeg)
+Build photo as of 12-20-23:
+![Rover](/imgs/rover_122023.jpeg)
